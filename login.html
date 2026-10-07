@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | CommiSave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#1f4d3a', accent: '#6c8f7a', cream: '#f7efe7' },
+          fontFamily: { sans: ['Poppins', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen p-4 page-shell">
+  <div class="mx-auto flex min-h-screen max-w-6xl items-center justify-center py-6">
+    <div class="grid w-full overflow-hidden rounded-[2rem] border border-[#e2d8ca] bg-[#fffaf4] shadow-[0_20px_60px_rgba(31,77,58,0.15)] lg:grid-cols-[1.05fr_0.95fr]">
+      <div class="hidden lg:block relative overflow-hidden bg-[#17362b]">
+        <img src="login_pic.jpg" alt="Savings illustration" class="h-full w-full object-cover opacity-50 grayscale-[0.1]">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0f2d22]/95 via-[#17362b]/40 to-[#17362b]/15"></div>
+        <div class="absolute inset-0 flex flex-col justify-end p-8 text-white">
+          <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm backdrop-blur-sm">
+            <span class="h-2.5 w-2.5 rounded-full bg-[#d8efd3]"></span>
+            Community-first savings
+          </div>
+          <h2 class="text-2xl font-semibold">Save together, grow stronger.</h2>
+          <p class="mt-2 max-w-md text-sm text-white/80">Trusted circles make budgeting easier, safer, and more rewarding for everyone involved.</p>
+        </div>
+        <div class="absolute left-8 top-8 w-44 animate-[float_4s_ease-in-out_infinite] rounded-2xl border border-white/20 bg-white/15 p-4 backdrop-blur-md">
+          <p class="text-[10px] uppercase tracking-[0.35em] text-[#d8efd3]">Shared Goal</p>
+          <p class="mt-2 text-xl font-semibold">$12k</p>
+          <p class="text-sm text-white/80">for emergency savings</p>
+        </div>
+        <div class="absolute bottom-8 right-8 w-56 animate-[float_5s_ease-in-out_infinite] rounded-2xl border border-white/20 bg-[#f7efe7]/90 p-4 text-[#17362b] shadow-lg">
+          <p class="text-[10px] uppercase tracking-[0.35em] text-[#2e6b4f]">Community impact</p>
+          <p class="mt-2 text-lg font-semibold">92% stay consistent</p>
+          <p class="text-sm text-[#4b6758]">because progress is visible together</p>
+        </div>
+      </div>
+
+      <div class="relative p-6 sm:p-8 lg:p-10">
+        <div class="absolute right-3 top-3 opacity-70 text-[#6c8f7a]">
+          <div class="flex flex-col items-center gap-2 text-2xl">
+            <span>✦</span>
+            <span class="text-lg">◌</span>
+          </div>
+        </div>
+        <div class="absolute left-3 bottom-5 opacity-60 text-[#6c8f7a]">
+          <div class="flex items-center gap-2 text-xl">
+            <span>◌</span>
+            <span>✧</span>
+            <span>◌</span>
+          </div>
+        </div>
+        <div class="absolute right-10 bottom-8 opacity-50 text-[#2e6b4f]">
+          <div class="flex items-center gap-1 text-lg">
+            <span>◜</span>
+            <span>◝</span>
+          </div>
+          <div class="flex items-center gap-1 text-lg">
+            <span>◟</span>
+            <span>◞</span>
+          </div>
+        </div>
+        <div class="flex justify-center mb-8">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-[#1f4d3a] rounded-2xl flex items-center justify-center text-white font-bold text-xl">C</div>
+            <div>
+              <h1 class="text-2xl font-semibold text-[#17362b]">CommiSave</h1>
+              <p class="text-sm muted-text">Create your account and save with confidence</p>
+            </div>
+          </div>
+        </div>
+
+        <form id="loginForm" class="space-y-4">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="block text-sm font-medium text-[#17362b] mb-1">First name</label>
+              <input name="firstName" type="text" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="John">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#17362b] mb-1">Last name</label>
+              <input name="lastName" type="text" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Doe">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#17362b] mb-1">Email address</label>
+            <input name="email" type="email" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="name@email.com">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#17362b] mb-1">Phone number</label>
+            <input name="phone" type="tel" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="+256 700 000 000">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#17362b] mb-1">Password</label>
+            <input id="passwordInput" name="password" type="password" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Create a password">
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center text-[#5f6f66]">
+              <input type="checkbox" class="mr-2 rounded border-[#c8baaa] text-[#1f4d3a]"> Keep me signed in
+            </label>
+            <a href="home.html" class="text-[#2e6b4f] font-medium">Continue later</a>
+          </div>
+          <button type="submit" class="btn-primary w-full py-3 rounded-2xl font-semibold">Continue to dashboard</button>
+        </form>
+        <div class="mt-6 text-center">
+          <p class="text-sm muted-text">Your details will appear on the dashboard and profile pages.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="firebase-config.js"></script>
+  <script src="user-profile.js"></script>
+</body>
+</html>

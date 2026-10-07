@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | CommiSave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#1f4d3a', accent: '#6c8f7a', cream: '#f7efe7' },
+          fontFamily: { sans: ['Poppins', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="page-shell">
+  <div class="flex min-h-screen">
+    <aside class="sidebar hidden md:flex flex-col w-72 p-6">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="brand-mark w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg">C</div>
+        <div>
+          <p class="text-lg font-semibold">CommiSave</p>
+          <p class="text-sm text-cream/80">Admin overview</p>
+        </div>
+      </div>
+      <nav class="space-y-2">
+        <a href="home.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>Home</a>
+        <a href="explore.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3c3.4 0 6 2.8 6 6.2 0 4.6-6 11.8-6 11.8S6 13.8 6 9.2C6 5.8 8.6 3 12 3z"/></svg></span>Explore</a>
+        <a href="admin.html" class="nav-link active flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.5 6.5h3m-3 5.5h3m-3 5.5h3M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg></span>Admin</a>
+        <a href="profile.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 8a7 7 0 0 1 14 0"/></svg></span>Profile</a>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-4 md:p-8">
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="stat-card">
+          <p class="text-sm muted-text">Active members</p>
+          <h3 id="memberCount" class="text-2xl font-bold mt-2">0</h3>
+          <p class="text-sm text-emerald-700 mt-2">Synced from Firebase</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm muted-text">Pending approvals</p>
+          <h3 class="text-2xl font-bold mt-2">0</h3>
+          <p class="text-sm muted-text mt-2">Ready for review</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm muted-text">Funds in circulation</p>
+          <h3 id="fundsInCirculation" class="text-2xl font-bold mt-2">$0</h3>
+          <p class="text-sm muted-text mt-2">Across connected accounts</p>
+        </div>
+      </section>
+
+      <section class="mb-6 rounded-[1.5rem] border border-[#e2d8ca] bg-white p-6 shadow-[0_12px_35px_rgba(31,77,58,0.08)]">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+          <div>
+            <p class="text-sm uppercase tracking-[0.2em] text-[#6c8f7a] font-semibold">Admin intelligence</p>
+            <h3 class="text-xl font-semibold text-[#17362b]">Risk review and liquidity forecast</h3>
+          </div>
+          <div class="rounded-full bg-[#f7efe7] px-3 py-1 text-sm font-semibold text-[#17362b]">Live model summary</div>
+        </div>
+        <div id="adminRiskInsights"></div>
+      </section>
+
+      <section class="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-6 mb-6">
+        <div class="panel p-6">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-semibold text-[#17362b]">Admin access request</h3>
+              <p class="muted-text text-sm mt-1">Become an admin by completing this form and paying the one-time onboarding fee.</p>
+            </div>
+            <span class="soft-pill px-3 py-1 rounded-full text-sm font-semibold">Required</span>
+          </div>
+
+          <form id="adminApplicationForm" class="mt-5 space-y-4">
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="block text-sm font-medium text-[#17362b] mb-1">Full name</label>
+                <input id="adminName" type="text" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Amina Kato">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-[#17362b] mb-1">Email address</label>
+                <input id="adminEmail" type="email" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="admin@email.com">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#17362b] mb-1">Phone number</label>
+              <input id="adminPhone" type="tel" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="+256 700 000 000">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#17362b] mb-1">Bank details</label>
+              <textarea id="bankDetails" rows="3" required class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Bank name, account number, and reference"></textarea>
+            </div>
+            <div class="rounded-2xl border border-[#e2d8ca] bg-[#f7efe7] p-4">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-[#17362b]">Payment required</span>
+                <span class="text-lg font-bold text-[#1f4d3a]">35,000</span>
+              </div>
+              <p class="mt-2 text-sm muted-text">Your admin review will only proceed after the onboarding payment is confirmed.</p>
+            </div>
+            <button type="submit" class="btn-primary w-full py-3 rounded-2xl font-semibold">Submit admin request</button>
+            <div id="adminFormMessage" class="hidden rounded-2xl border border-[#dce8d9] bg-[#f3fbf4] p-3 text-sm text-[#2e6b4f]"></div>
+          </form>
+        </div>
+
+        <div class="panel p-6">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-semibold text-[#17362b]">Invite group members</h3>
+              <p class="muted-text text-sm mt-1">Generate a QR code or share a direct link to welcome members into your group.</p>
+            </div>
+            <span class="soft-pill px-3 py-1 rounded-full text-sm font-semibold">Invite</span>
+          </div>
+
+          <div class="mt-5 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+            <div class="space-y-3">
+              <div>
+                <label class="block text-sm font-medium text-[#17362b] mb-1">Search existing profile</label>
+                <div class="flex gap-2">
+                  <input id="profileSearch" type="text" class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Search by email or phone">
+                  <button type="button" id="searchProfileBtn" class="btn-secondary px-3 py-2 rounded-xl font-semibold">Search</button>
+                </div>
+              </div>
+              <div id="profileSearchResult" class="rounded-2xl border border-[#e2d8ca] bg-[#fcfaf6] p-3 text-sm muted-text">
+                Search for a profile to confirm whether the member already exists before inviting them.
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-[#17362b] mb-1">Invite manually by link</label>
+                <input id="manualInviteContact" type="text" class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Email or phone number">
+                <button type="button" id="addManualInviteBtn" class="btn-secondary mt-2 w-full py-2 rounded-xl font-semibold">Add manual invite</button>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <label class="block text-sm font-medium text-[#17362b] mb-1">Join link base</label>
+              <input id="inviteBaseLink" type="text" value="https://commisave.app/join/" class="w-full px-4 py-3 rounded-2xl border border-[#e2d8ca] bg-white outline-none focus:ring-2 focus:ring-[#6c8f7a]">
+              <button type="button" id="generateQrBtn" class="btn-primary w-full py-2 rounded-xl font-semibold">Create QR invite</button>
+              <div id="qrCodeWrap" class="rounded-2xl border border-dashed border-[#cfc1a9] bg-[#f9f4eb] p-4 min-h-[180px] flex items-center justify-center">
+                <p class="text-sm muted-text text-center">A QR code will appear here after you generate one.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-semibold text-[#17362b]">Manual invites</h4>
+              <span class="text-sm muted-text">Share links directly</span>
+            </div>
+            <div id="manualInviteList" class="space-y-2"></div>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button type="button" id="copyAllLinksBtn" class="btn-secondary px-3 py-2 rounded-xl text-sm font-semibold">Copy all links</button>
+              <button type="button" id="clearInvitesBtn" class="btn-secondary px-3 py-2 rounded-xl text-sm font-semibold">Clear list</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="panel overflow-hidden">
+        <div class="p-6 border-b border-[#e8dfd1] flex justify-between items-center">
+          <div>
+            <h3 class="text-xl font-semibold text-[#17362b]">Member management</h3>
+            <p class="muted-text text-sm mt-1">Keep records current and trusted.</p>
+          </div>
+          <button class="btn-primary px-4 py-2 rounded-full text-sm font-semibold">Export CSV</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left table-card">
+            <thead>
+              <tr>
+                <th class="px-6 py-4">Member</th>
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4">Contribution</th>
+                <th class="px-6 py-4">Trust score</th>
+                <th class="px-6 py-4">Action</th>
+              </tr>
+            </thead>
+            <tbody id="memberTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    const adminApplicationForm = document.getElementById('adminApplicationForm');
+    const adminFormMessage = document.getElementById('adminFormMessage');
+
+    if (adminApplicationForm) {
+      adminApplicationForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const name = document.getElementById('adminName').value.trim();
+        const email = document.getElementById('adminEmail').value.trim();
+        const phone = document.getElementById('adminPhone').value.trim();
+        const bankDetails = document.getElementById('bankDetails').value.trim();
+
+        if (!name || !email || !phone || !bankDetails) {
+          adminFormMessage.classList.remove('hidden');
+          adminFormMessage.textContent = 'Please complete all fields before submitting your admin request.';
+          return;
+        }
+
+        adminFormMessage.classList.remove('hidden');
+        adminFormMessage.textContent = `${name}, your admin request has been received. Please complete the 35,000 onboarding payment using your bank details for review.`;
+        adminApplicationForm.reset();
+      });
+    }
+
+    const profileSearchInput = document.getElementById('profileSearch');
+    const searchProfileBtn = document.getElementById('searchProfileBtn');
+    const profileSearchResult = document.getElementById('profileSearchResult');
+    const manualInviteContact = document.getElementById('manualInviteContact');
+    const addManualInviteBtn = document.getElementById('addManualInviteBtn');
+    const manualInviteList = document.getElementById('manualInviteList');
+    const inviteBaseLink = document.getElementById('inviteBaseLink');
+    const generateQrBtn = document.getElementById('generateQrBtn');
+    const qrCodeWrap = document.getElementById('qrCodeWrap');
+    const copyAllLinksBtn = document.getElementById('copyAllLinksBtn');
+    const clearInvitesBtn = document.getElementById('clearInvitesBtn');
+    const inviteEntries = [];
+
+    function createInviteLink(contact) {
+      const base = (inviteBaseLink.value || 'https://commisave.app/join/').trim();
+      return `${base}${encodeURIComponent(contact)}`;
+    }
+
+    function renderInvites() {
+      if (!manualInviteList) return;
+      if (!inviteEntries.length) {
+        manualInviteList.innerHTML = '<div class="rounded-2xl border border-dashed border-[#e2d8ca] bg-[#fcfaf6] p-3 text-sm muted-text">No manual invites yet. Add one to send a direct link.</div>';
+        return;
+      }
+
+      manualInviteList.innerHTML = inviteEntries.map((entry) => `
+        <div class="rounded-2xl border border-[#e2d8ca] bg-[#fcfaf6] p-3">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="font-semibold text-[#17362b]">${entry.contact}</p>
+              <p class="text-sm muted-text">${entry.label}</p>
+            </div>
+            <button type="button" class="text-sm font-semibold text-[#2e6b4f]" onclick="navigator.clipboard.writeText('${entry.link}')">Copy</button>
+          </div>
+          <p class="mt-2 text-sm break-all text-[#2e6b4f]">${entry.link}</p>
+        </div>
+      `).join('');
+    }
+
+    if (searchProfileBtn) {
+      searchProfileBtn.addEventListener('click', function () {
+        const query = (profileSearchInput.value || '').trim().toLowerCase();
+        if (!query) {
+          profileSearchResult.innerHTML = '<span class="text-[#7a6b58]">Enter an email or phone number to search for a profile.</span>';
+          return;
+        }
+
+        const match = inviteEntries.find((entry) => entry.contact.toLowerCase().includes(query));
+        if (match) {
+          profileSearchResult.innerHTML = `
+            <div class="font-semibold text-[#17362b]">Profile found</div>
+            <div class="mt-1 text-sm">${match.contact}</div>
+            <div class="mt-2 text-sm text-[#2e6b4f]">An invite link is ready to send to this member.</div>
+          `;
+        } else {
+          profileSearchResult.innerHTML = '<div class="text-sm text-[#7a6b58]">No matching profile was found. You can still invite this member manually with a link below.</div>';
+        }
+      });
+    }
+
+    if (addManualInviteBtn) {
+      addManualInviteBtn.addEventListener('click', function () {
+        const contact = (manualInviteContact.value || '').trim();
+        if (!contact) {
+          alert('Add an email address or phone number to create an invite link.');
+          return;
+        }
+
+        inviteEntries.push({
+          contact,
+          label: 'Manual invite',
+          link: createInviteLink(contact)
+        });
+
+        manualInviteContact.value = '';
+        renderInvites();
+      });
+    }
+
+    if (generateQrBtn) {
+      generateQrBtn.addEventListener('click', function () {
+        const value = (inviteBaseLink.value || '').trim();
+        if (!value) {
+          qrCodeWrap.innerHTML = '<p class="text-sm muted-text text-center">Enter a join link before generating a QR code.</p>';
+          return;
+        }
+
+        qrCodeWrap.innerHTML = '';
+        if (window.QRCode) {
+          QRCode.toCanvas(qrCodeWrap, value, { width: 180, margin: 1 }, function (error) {
+            if (error) {
+              qrCodeWrap.innerHTML = '<p class="text-sm muted-text text-center">QR generation failed. Please try again.</p>';
+            }
+          });
+        } else {
+          qrCodeWrap.innerHTML = '<p class="text-sm muted-text text-center">QR support is unavailable in this browser.</p>';
+        }
+      });
+    }
+
+    if (copyAllLinksBtn) {
+      copyAllLinksBtn.addEventListener('click', function () {
+        const links = inviteEntries.map((entry) => entry.link).join('\n');
+        if (!links) {
+          alert('No invites to copy yet.');
+          return;
+        }
+        navigator.clipboard.writeText(links);
+        alert('Invite links copied to your clipboard.');
+      });
+    }
+
+    if (clearInvitesBtn) {
+      clearInvitesBtn.addEventListener('click', function () {
+        inviteEntries.length = 0;
+        renderInvites();
+      });
+    }
+
+    renderInvites();
+  </script>
+  <script src="firebase-config.js"></script>
+  <script src="user-profile.js"></script>
+</body>
+</html>

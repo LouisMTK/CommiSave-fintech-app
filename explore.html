@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore | CommiSave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#1f4d3a', accent: '#6c8f7a', cream: '#f7efe7' },
+          fontFamily: { sans: ['Poppins', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="page-shell">
+  <div class="flex min-h-screen">
+    <aside class="sidebar hidden md:flex flex-col w-72 p-6">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="brand-mark w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg">C</div>
+        <div>
+          <p class="text-lg font-semibold">CommiSave</p>
+          <p class="text-sm text-cream/80">Discover groups</p>
+        </div>
+      </div>
+      <nav class="space-y-2">
+        <a href="home.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3">🏠</span>Home</a>
+        <a href="explore.html" class="nav-link active flex items-center px-4 py-3 font-medium"><span class="mr-3">🌿</span>Explore</a>
+        <a href="admin.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3">⚙️</span>Admin</a>
+        <a href="profile.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3">👤</span>Profile</a>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-4 md:p-8">
+      <header class="panel px-5 py-4 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <p class="text-sm uppercase tracking-[0.25em] text-[#6c8f7a] font-semibold">Explore circles</p>
+          <h2 class="text-2xl font-semibold text-[#17362b]">Find a group that matches your rhythm.</h2>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="text" placeholder="Search groups..." class="px-4 py-2 rounded-full border border-[#e2d8ca] bg-[#fffaf4] outline-none focus:ring-2 focus:ring-[#6c8f7a]">
+          <select class="px-4 py-2 rounded-full border border-[#e2d8ca] bg-[#fffaf4] text-sm">
+            <option>High trust score</option>
+            <option>Lower contribution</option>
+          </select>
+        </div>
+      </header>
+
+      <section class="mb-6 rounded-[1.5rem] border border-[#e2d8ca] bg-white p-6 shadow-[0_12px_35px_rgba(31,77,58,0.08)]">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+          <div>
+            <p class="text-sm uppercase tracking-[0.2em] text-[#6c8f7a] font-semibold">Smart risk lens</p>
+            <h3 class="text-xl font-semibold text-[#17362b]">Live trust and payout guidance for each circle</h3>
+          </div>
+          <div class="rounded-full bg-[#f7efe7] px-3 py-1 text-sm font-semibold text-[#17362b]">Model-driven recommendations</div>
+        </div>
+        <div id="riskInsightsList" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <article class="card overflow-hidden">
+          <div class="h-32 bg-gradient-to-br from-[#1f4d3a] to-[#2e6b4f] p-6 flex flex-col justify-end relative">
+            <span class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">🔒 Secure</span>
+            <h3 class="text-white font-semibold text-lg">East Africa Real Estate Hub</h3>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-semibold uppercase tracking-[0.25em] text-[#6c8f7a]">Trust score</span>
+              <span class="soft-pill px-3 py-1 rounded-full text-xs font-bold">94/100</span>
+            </div>
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span class="muted-text">Monthly contribution</span>
+                <span class="font-semibold text-[#17362b]">$200</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="muted-text">Member limit</span>
+                <span class="font-semibold text-[#17362b]">20 members</span>
+              </div>
+            </div>
+            <button class="btn-primary w-full py-3 rounded-xl font-semibold">Request to join</button>
+          </div>
+        </article>
+
+        <article class="card overflow-hidden">
+          <div class="h-32 bg-gradient-to-br from-[#2d5e46] to-[#4f7d63] p-6 flex flex-col justify-end relative">
+            <span class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">✨ New</span>
+            <h3 class="text-white font-semibold text-lg">Harvest Circle</h3>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-semibold uppercase tracking-[0.25em] text-[#6c8f7a]">Trust score</span>
+              <span class="soft-pill px-3 py-1 rounded-full text-xs font-bold">91/100</span>
+            </div>
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span class="muted-text">Monthly contribution</span>
+                <span class="font-semibold text-[#17362b]">$150</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="muted-text">Member limit</span>
+                <span class="font-semibold text-[#17362b]">15 members</span>
+              </div>
+            </div>
+            <button class="btn-primary w-full py-3 rounded-xl font-semibold">Request to join</button>
+          </div>
+        </article>
+
+        <article class="card overflow-hidden">
+          <div class="h-32 bg-gradient-to-br from-[#274d3b] to-[#5b856b] p-6 flex flex-col justify-end relative">
+            <span class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">🌱 Growing</span>
+            <h3 class="text-white font-semibold text-lg">Green House Collective</h3>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-semibold uppercase tracking-[0.25em] text-[#6c8f7a]">Trust score</span>
+              <span class="soft-pill px-3 py-1 rounded-full text-xs font-bold">97/100</span>
+            </div>
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span class="muted-text">Monthly contribution</span>
+                <span class="font-semibold text-[#17362b]">$300</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="muted-text">Member limit</span>
+                <span class="font-semibold text-[#17362b]">18 members</span>
+              </div>
+            </div>
+            <button class="btn-primary w-full py-3 rounded-xl font-semibold">Request to join</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

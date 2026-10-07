@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | CommiSave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#1f4d3a', accent: '#6c8f7a', cream: '#f7efe7' },
+          fontFamily: { sans: ['Poppins', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="page-shell">
+  <div class="flex min-h-screen">
+    <aside class="sidebar hidden md:flex flex-col w-72 p-6">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="brand-mark w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg">C</div>
+        <div>
+          <p class="text-lg font-semibold">CommiSave</p>
+          <p class="text-sm text-cream/80">Collective savings</p>
+        </div>
+      </div>
+      <nav class="space-y-2">
+        <a href="home.html" class="nav-link active flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>Home</a>
+        <a href="explore.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3c3.4 0 6 2.8 6 6.2 0 4.6-6 11.8-6 11.8S6 13.8 6 9.2C6 5.8 8.6 3 12 3z"/></svg></span>Explore</a>
+        <a href="admin.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.5 6.5h3m-3 5.5h3m-3 5.5h3M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg></span>Admin</a>
+        <a href="profile.html" class="nav-link flex items-center px-4 py-3 font-medium"><span class="mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 8a7 7 0 0 1 14 0"/></svg></span>Profile</a>
+      </nav>
+      <div class="mt-auto panel p-4">
+        <p class="text-sm font-semibold">Next milestone</p>
+        <p class="text-2xl font-bold mt-2">$8,500</p>
+        <p class="muted-text text-sm mt-1">Target reached in 2 months</p>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-4 md:p-8">
+      <section class="relative mb-6 overflow-hidden rounded-[1.6rem] border border-[#e2d8ca] bg-[#17362b] shadow-[0_18px_45px_rgba(31,77,58,0.16)]">
+        <img src="login_pic.jpg" alt="Children holding money for community saving" class="h-64 w-full object-cover opacity-45">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#17362b]/95 via-[#17362b]/70 to-[#2e6b4f]/40"></div>
+        <div class="absolute inset-0 flex flex-col justify-center px-6 py-8 sm:px-10 lg:px-12">
+          <div class="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-[#f7efe7] backdrop-blur-sm">
+            <span class="h-2.5 w-2.5 rounded-full bg-[#d8efd3]"></span>
+            Community savings culture
+          </div>
+          <div class="max-w-2xl">
+            <h2 class="text-3xl font-semibold text-white sm:text-4xl">CommiSave</h2>
+            <p class="mt-3 text-sm text-[#f7efe7]/85 sm:text-base">A modern home for shared goals, trusted circles, and steady financial growth for every family.</p>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="explore.html" class="rounded-full bg-[#f7efe7] px-4 py-2 text-sm font-semibold text-[#17362b] transition hover:scale-[1.02]">Explore groups</a>
+            <a href="profile.html" class="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:scale-[1.02]">View profile</a>
+          </div>
+        </div>
+        <div class="absolute right-6 top-6 animate-[float_4s_ease-in-out_infinite] rounded-2xl border border-white/20 bg-white/15 p-3 text-white backdrop-blur-md">
+          <p class="text-[10px] uppercase tracking-[0.35em] text-[#d8efd3]">Impact</p>
+          <p class="mt-1 text-lg font-semibold">+18% growth</p>
+        </div>
+      </section>
+
+      <header class="panel flex items-center justify-between px-5 py-4 mb-6">
+        <div>
+          <p class="text-sm uppercase tracking-[0.25em] text-[#6c8f7a] font-semibold">Welcome back</p>
+          <h2 id="welcomeName" class="text-2xl font-semibold text-[#17362b]">Friend, your savings are growing.</h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-secondary px-3 py-2 rounded-full text-sm">🔔 Alerts</button>
+          <img id="avatarImage" src="https://ui-avatars.com/api/?name=Guest+User&background=1f4d3a&color=fff" class="w-10 h-10 rounded-full border-2 border-[#6c8f7a]" alt="Avatar">
+        </div>
+      </header>
+
+      <section class="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-6 mb-6">
+        <div class="panel p-6 hero-ring">
+          <p class="soft-pill inline-flex px-3 py-1 rounded-full text-sm font-semibold">Live progress</p>
+          <h3 class="text-2xl font-semibold mt-4">Your community plan is updating in real time.</h3>
+          <p class="muted-text mt-3 max-w-xl">Savings, group activity, and payout updates are linked to your account profile and will stay in sync as you use the site.</p>
+          <div class="flex gap-3 mt-6">
+            <a href="explore.html" class="btn-primary px-4 py-2 rounded-full text-sm font-semibold">Explore groups</a>
+            <a href="profile.html" class="btn-secondary px-4 py-2 rounded-full text-sm font-semibold">View profile</a>
+          </div>
+        </div>
+        <div class="panel p-6">
+          <p class="text-sm uppercase tracking-[0.2em] text-[#6c8f7a] font-semibold">This month</p>
+          <div class="mt-4 space-y-4">
+            <div class="flex justify-between items-center border-b border-[#e8dfd1] pb-3">
+              <span class="muted-text">Payout ready</span>
+              <span id="payoutReady" class="font-semibold text-[#17362b]">—</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-[#e8dfd1] pb-3">
+              <span class="muted-text">Joined groups</span>
+              <span id="joinedGroups" class="font-semibold text-[#17362b]">—</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="muted-text">Trust score</span>
+              <span id="trustScore" class="font-semibold text-[#17362b]">—</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+        <div class="panel p-6">
+          <p class="soft-pill inline-flex px-3 py-1 rounded-full text-sm font-semibold">Trust intelligence</p>
+          <h3 class="text-xl font-semibold text-[#17362b] mt-3">Your live risk profile is updating continuously.</h3>
+          <div class="mt-4 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-2xl border border-[#e2d8ca] bg-[#fcfaf6] p-4">
+              <p class="text-sm muted-text">Live trust score</p>
+              <p id="liveTrustScore" class="text-xl font-semibold text-[#17362b] mt-1">—</p>
+            </div>
+            <div class="rounded-2xl border border-[#e2d8ca] bg-[#fcfaf6] p-4">
+              <p class="text-sm muted-text">Anomaly status</p>
+              <p id="anomalyStatus" class="text-xl font-semibold text-[#17362b] mt-1">—</p>
+            </div>
+            <div class="rounded-2xl border border-[#e2d8ca] bg-[#fcfaf6] p-4">
+              <p class="text-sm muted-text">Forecast</p>
+              <p id="forecastSummary" class="text-xl font-semibold text-[#17362b] mt-1">—</p>
+            </div>
+          </div>
+          <p id="insightNote" class="mt-4 text-sm text-[#2e6b4f]">—</p>
+        </div>
+        <div class="panel p-6">
+          <p class="soft-pill inline-flex px-3 py-1 rounded-full text-sm font-semibold">Decision support</p>
+          <h3 class="text-xl font-semibold text-[#17362b] mt-3">Suggested payout rotation</h3>
+          <p class="muted-text mt-2">The system recommends safer cycle positions for members with stronger punctuality and lower default risk.</p>
+          <div class="mt-4 rounded-2xl border border-[#e2d8ca] bg-[#f7efe7] p-4 text-sm text-[#17362b]">
+            <p class="font-semibold">Recommended approach</p>
+            <p class="mt-1">Place highly reliable members later in the rotation and keep a larger buffer for members with recent volatility.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="depositSection" class="mb-6 rounded-[1.5rem] border border-[#e2d8ca] bg-white p-6 shadow-[0_12px_35px_rgba(31,77,58,0.08)]">
+        <div class="mb-5">
+          <p class="soft-pill inline-flex px-3 py-1 rounded-full text-sm font-semibold">Deposit section</p>
+          <h3 class="text-2xl font-semibold text-[#17362b] mt-3">Choose how you want to grow your savings</h3>
+          <p class="muted-text mt-2 max-w-2xl">Make an individual deposit or join a group savings circle. Group deposits stay pending until the group leader approves the request.</p>
+        </div>
+
+        <div class="grid gap-6 xl:grid-cols-2">
+          <div class="rounded-[1.3rem] border border-[#e8dfd1] bg-[#fcfaf6] p-5">
+            <h4 class="text-lg font-semibold text-[#17362b]">Individual savings</h4>
+            <p class="muted-text text-sm mt-1">Save on your own with flexible deposit methods.</p>
+            <form id="individualDepositForm" class="mt-4 space-y-3">
+              <div>
+                <p class="mb-1 text-sm font-semibold text-[#17362b]">Payment method</p>
+                <select id="depositMethod" class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]">
+                  <option>Mobile money</option>
+                  <option>PayPal</option>
+                  <option>Debit card</option>
+                </select>
+              </div>
+              <div>
+                <p class="mb-1 text-sm font-semibold text-[#17362b]">Deposit amount</p>
+                <input id="individualAmount" type="number" min="1000" required class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Amount to save (UGX)">
+              </div>
+              <div>
+                <p class="mb-1 text-sm font-semibold text-[#17362b]">Payout date</p>
+                <input id="payoutDate" type="date" required class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]">
+              </div>
+              <div>
+                <p class="mb-1 text-sm font-semibold text-[#17362b]">Saving reason</p>
+                <textarea id="savingReason" rows="3" required class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Reason for saving"></textarea>
+              </div>
+              <button type="submit" class="btn-primary w-full rounded-2xl px-4 py-3 font-semibold">Deposit now</button>
+            </form>
+            <div id="individualDepositMessage" class="mt-3 hidden rounded-2xl border border-[#dce8d9] bg-[#f3fbf4] p-3 text-sm text-[#2e6b4f]"></div>
+          </div>
+
+          <div class="rounded-[1.3rem] border border-[#e8dfd1] bg-[#f7efe7] p-5">
+            <h4 class="text-lg font-semibold text-[#17362b]">Group savings</h4>
+            <p class="muted-text text-sm mt-1">Search a group by name or leader and subscribe to the circle.</p>
+            <div class="mt-4 space-y-3">
+              <div class="flex gap-2">
+                <input id="groupSearch" type="text" class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Search group name or leader">
+                <button id="searchGroupBtn" type="button" class="btn-secondary rounded-2xl px-3 py-3 font-semibold">Search</button>
+              </div>
+              <div id="groupSearchResult" class="rounded-2xl border border-[#e2d8ca] bg-white/80 p-3 text-sm muted-text">
+                Search for a group to view its minimum and maximum deposit range.
+              </div>
+              <form id="groupDepositForm" class="space-y-3">
+                <div>
+                  <p class="mb-1 text-sm font-semibold text-[#17362b]">Payment method</p>
+                  <select id="groupDepositMethod" class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]">
+                    <option>Mobile money</option>
+                    <option>PayPal</option>
+                    <option>Debit card</option>
+                  </select>
+                </div>
+                <div>
+                  <p class="mb-1 text-sm font-semibold text-[#17362b]">Payout date</p>
+                  <input id="groupPayoutDate" type="date" required class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]">
+                </div>
+                <div>
+                  <p class="mb-1 text-sm font-semibold text-[#17362b]">Saving reason</p>
+                  <textarea id="groupSavingReason" rows="3" required class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Reason for joining this group savings target"></textarea>
+                </div>
+                <div>
+                  <p class="mb-1 text-sm font-semibold text-[#17362b]">Deposit amount</p>
+                  <input id="groupAmount" type="number" min="1000" required class="w-full rounded-2xl border border-[#e2d8ca] bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-[#6c8f7a]" placeholder="Amount to start saving (UGX)">
+                </div>
+                <button id="groupDepositButton" type="submit" class="btn-secondary w-full rounded-2xl px-4 py-3 font-semibold" disabled>Deposit to group</button>
+                <button id="approveLeaderBtn" type="button" class="btn-primary w-full rounded-2xl px-4 py-3 font-semibold">Mark as approved by leader</button>
+              </form>
+              <div id="groupDepositMessage" class="rounded-2xl border border-[#dce8d9] bg-[#f3fbf4] p-3 text-sm text-[#2e6b4f]">
+                Your request will be sent to the group leader for verification before the deposit becomes active.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="stat-card">
+          <p class="text-sm muted-text">Total savings</p>
+          <h3 id="totalSavings" class="text-2xl font-bold mt-2">—</h3>
+          <p class="text-sm text-emerald-700 mt-2">Updated from your profile</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm muted-text">Active groups</p>
+          <h3 id="activeGroups" class="text-2xl font-bold mt-2">—</h3>
+          <p class="text-sm muted-text mt-2">Linked to your account</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm muted-text">Next payout</p>
+          <h3 id="nextPayout" class="text-2xl font-bold mt-2">—</h3>
+          <p class="text-sm muted-text mt-2">Scheduled in your profile</p>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-6">
+        <div class="panel p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-[#17362b]">Savings growth</h3>
+            <span class="soft-pill px-3 py-1 rounded-full text-sm font-medium">Live chart</span>
+          </div>
+          <div class="h-72 rounded-2xl bg-[#f9f4eb] p-3">
+            <canvas id="growthChart"></canvas>
+          </div>
+        </div>
+        <div class="panel p-6">
+          <h3 class="text-xl font-semibold text-[#17362b]">Recent activity</h3>
+          <div id="activityList" class="mt-4 space-y-3"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="user-profile.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const individualForm = document.getElementById('individualDepositForm');
+      const individualMessage = document.getElementById('individualDepositMessage');
+      const groupForm = document.getElementById('groupDepositForm');
+      const groupMessage = document.getElementById('groupDepositMessage');
+      const groupSearchInput = document.getElementById('groupSearch');
+      const searchGroupBtn = document.getElementById('searchGroupBtn');
+      const groupSearchResult = document.getElementById('groupSearchResult');
+      const groupDepositButton = document.getElementById('groupDepositButton');
+      const approveLeaderBtn = document.getElementById('approveLeaderBtn');
+
+      const groupOptions = [
+        { name: 'Emergency Circle', leader: 'Sarah Nakam', min: 50000, max: 200000, email: 'sarah@commisave.com' },
+        { name: 'Family Fund', leader: 'Moses Kato', min: 100000, max: 300000, email: 'moses@commisave.com' }
+      ];
+
+      let selectedGroup = null;
+      let leaderApproved = false;
+
+      function showMessage(element, message, success) {
+        if (!element) return;
+        element.classList.remove('hidden');
+        element.textContent = message;
+        element.classList.remove('border-[#dce8d9]', 'bg-[#f3fbf4]', 'text-[#2e6b4f]');
+        element.classList.remove('border-[#f3d7c3]', 'bg-[#fff5ea]', 'text-[#9a5a1f]');
+        if (success) {
+          element.classList.add('border-[#dce8d9]', 'bg-[#f3fbf4]', 'text-[#2e6b4f]');
+        } else {
+          element.classList.add('border-[#f3d7c3]', 'bg-[#fff5ea]', 'text-[#9a5a1f]');
+        }
+      }
+
+      if (individualForm) {
+        individualForm.addEventListener('submit', function (event) {
+          event.preventDefault();
+          const amount = Number(document.getElementById('individualAmount').value || 0);
+          const payoutDate = document.getElementById('payoutDate').value;
+          const daysLate = Math.max(0, Math.round((new Date(payoutDate) - new Date()) / (1000 * 60 * 60 * 24)) * -1 || 0);
+          const telemetry = window.CommiSaveRisk && window.CommiSaveRisk.recordTelemetry;
+          if (telemetry) {
+            telemetry({ amount, daysLate, daysEarly: 0, exitedEarly: false, type: 'individual' });
+          }
+          showMessage(individualMessage, 'Individual deposit request submitted successfully. Your contribution will be reflected in your dashboard shortly.', true);
+          individualForm.reset();
+        });
+      }
+
+      if (searchGroupBtn) {
+        searchGroupBtn.addEventListener('click', function () {
+          const query = (groupSearchInput.value || '').trim().toLowerCase();
+          if (!query) {
+            selectedGroup = null;
+            groupSearchResult.innerHTML = 'Search for a group to view its minimum and maximum deposit range.';
+            groupDepositButton.disabled = true;
+            leaderApproved = false;
+            showMessage(groupMessage, 'Search a group first to continue.', false);
+            return;
+          }
+
+          selectedGroup = groupOptions.find((group) => group.name.toLowerCase().includes(query) || group.leader.toLowerCase().includes(query));
+          if (!selectedGroup) {
+            groupSearchResult.innerHTML = 'No matching group was found. Try another group name or leader.';
+            groupDepositButton.disabled = true;
+            leaderApproved = false;
+            showMessage(groupMessage, 'No matching group was found. Try another group name or leader.', false);
+            return;
+          }
+
+          groupSearchResult.innerHTML = `<div class="font-semibold text-[#17362b]">${selectedGroup.name}</div><div class="mt-1 text-sm">Leader: ${selectedGroup.leader}</div><div class="mt-1 text-sm">Allowed range: UGX ${selectedGroup.min.toLocaleString()} - UGX ${selectedGroup.max.toLocaleString()}</div><div class="mt-1 text-sm">An email request will be sent to ${selectedGroup.email} for verification.</div>`;
+          groupDepositButton.disabled = true;
+          leaderApproved = false;
+          showMessage(groupMessage, 'Group selected. Your request is waiting for leader approval before the deposit button becomes active.', false);
+        });
+      }
+
+      if (approveLeaderBtn) {
+        approveLeaderBtn.addEventListener('click', function () {
+          if (!selectedGroup) {
+            showMessage(groupMessage, 'Search and select a group first before approving the request.', false);
+            return;
+          }
+          leaderApproved = true;
+          groupDepositButton.disabled = false;
+          showMessage(groupMessage, `Leader approval received for ${selectedGroup.name}. You can now submit your group deposit.`, true);
+        });
+      }
+
+      if (groupForm) {
+        groupForm.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (!selectedGroup) {
+            showMessage(groupMessage, 'Select a group first before submitting the request.', false);
+            return;
+          }
+
+          const amount = Number(document.getElementById('groupAmount').value);
+          const payoutDate = document.getElementById('groupPayoutDate').value;
+          const daysLate = Math.max(0, Math.round((new Date(payoutDate) - new Date()) / (1000 * 60 * 60 * 24)) * -1 || 0);
+          const telemetry = window.CommiSaveRisk && window.CommiSaveRisk.recordTelemetry;
+          if (telemetry) {
+            telemetry({ amount, daysLate, daysEarly: 0, exitedEarly: false, type: 'group', flagged: amount > selectedGroup.max });
+          }
+          if (amount < selectedGroup.min || amount > selectedGroup.max) {
+            showMessage(groupMessage, `Your starting amount must match the group range of UGX ${selectedGroup.min.toLocaleString()} to UGX ${selectedGroup.max.toLocaleString()}.`, false);
+            return;
+          }
+
+          if (!leaderApproved) {
+            showMessage(groupMessage, 'Your group request is still pending approval from the group leader. The deposit button stays disabled until approval is granted.', false);
+            return;
+          }
+
+          showMessage(groupMessage, `Group deposit request submitted for ${selectedGroup.name}. Your contribution is now active.`, true);
+          groupForm.reset();
+          groupDepositButton.disabled = true;
+          leaderApproved = false;
+          selectedGroup = null;
+          groupSearchResult.innerHTML = 'Search for a group to view its minimum and maximum deposit range.';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
